@@ -192,17 +192,24 @@
 
     function buyUpgrade(type) {
       const upgrade = upgrades[type];
-      if (money >= upgrade.cost) {
+      console.log(`Essai d'acheter ${type}, coût: ${upgrade.cost}, argent disponible: ${money}`);
+
+      if (Math.floor(money) >= upgrade.cost) {
         money -= upgrade.cost;
         gainPerClick += upgrade.clickBoost;
         gainPerSecond += upgrade.autoBoost;
         upgrades[type].cost = Math.floor(upgrade.cost * 1.5);
-        // Update cost display button text:
+
+        // Mise à jour du texte du bouton pour refléter le nouveau prix
         const btn = document.querySelector(`#${type} button`);
         if (btn) btn.textContent = upgrades[type].cost + "€";
+
         updateDisplay();
         saveGame();
+
+        console.log(`Achat réussi de ${type}. Nouveau coût : ${upgrades[type].cost}`);
       } else {
+        console.log("Pas assez d'argent !");
         alert("Pas assez d'argent !");
       }
     }
@@ -219,48 +226,35 @@
       localStorage.setItem("gainPerSecond", gainPerSecond);
     }
 
-    // Gestion des sections (menu, jeu, succès, illustration)
+    // Navigation functions
     const menuDiv = document.querySelector(".menu");
     const gameSection = document.querySelector(".game-section");
     const successSection = document.querySelector(".success");
     const illustrationDiv = document.querySelector(".illustration");
 
-    function showSection(sectionName) {
-      const sections = {
-        menu: menuDiv,
-        game: gameSection,
-        success: successSection,
-      };
-      // Illustration visible uniquement dans le jeu
-      if (sectionName === "game") {
-        illustrationDiv.classList.remove("hidden");
-      } else {
-        illustrationDiv.classList.add("hidden");
-      }
-
-      for (const key in sections) {
-        if (key === sectionName) {
-          sections[key].classList.remove("hidden");
-        } else {
-          sections[key].classList.add("hidden");
-        }
-      }
-    }
-
     document.getElementById("startBtn").addEventListener("click", () => {
-      showSection("game");
+      menuDiv.classList.add("hidden");
+      successSection.classList.add("hidden");
+      gameSection.classList.remove("hidden");
+      illustrationDiv.classList.remove("hidden");
     });
 
     document.getElementById("showSuccessBtn").addEventListener("click", () => {
-      showSection("success");
+      menuDiv.classList.add("hidden");
+      gameSection.classList.add("hidden");
+      illustrationDiv.classList.add("hidden");
+      successSection.classList.remove("hidden");
     });
 
     document.getElementById("backToMenuFromSuccess").addEventListener("click", () => {
-      showSection("menu");
+      successSection.classList.add("hidden");
+      menuDiv.classList.remove("hidden");
     });
 
     document.getElementById("backToMenuFromGame").addEventListener("click", () => {
-      showSection("menu");
+      gameSection.classList.add("hidden");
+      illustrationDiv.classList.add("hidden");
+      menuDiv.classList.remove("hidden");
     });
 
     document.getElementById("resetBtn").addEventListener("click", () => {
@@ -269,8 +263,25 @@
         money = 0;
         gainPerClick = 1;
         gainPerSecond = 0;
+
+        // Remettre les coûts de base à leur valeur initiale
+        upgrades.pc.cost = 100;
+        upgrades.freelancer.cost = 250;
+        upgrades.website.cost = 500;
+        upgrades.agency.cost = 1500;
+        upgrades.automation.cost = 5000;
+
+        // Remettre le texte des boutons à jour
+        for (let key in upgrades) {
+          const btn = document.querySelector(`#${key} button`);
+          if (btn) btn.textContent = upgrades[key].cost + "€";
+        }
+
         updateDisplay();
-        showSection("menu");
+        menuDiv.classList.remove("hidden");
+        gameSection.classList.add("hidden");
+        successSection.classList.add("hidden");
+        illustrationDiv.classList.add("hidden");
       }
     });
 
