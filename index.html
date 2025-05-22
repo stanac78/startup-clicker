@@ -2,548 +2,577 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>🚀 Fusée Clicker - Vers l’Espace</title>
+  <title>🚀 Space Rocket Builder</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/a2d9f5e7e2.js" crossorigin="anonymous"></script>
   <style>
     body {
       font-family: 'Nunito', sans-serif;
-      background: #00111f;
-      color: #cfd8dc;
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
+      background: linear-gradient(145deg, #00111f, #003366);
+      color: #ddd;
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
-      user-select: none;
     }
     header {
-      padding: 20px;
-      text-align: center;
-      background: #011627;
+      background: #021f4a;
       width: 100%;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      text-align: center;
+      padding: 20px 0;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+      color: #a3d2ca;
     }
     h1 {
       margin: 0;
-      font-weight: 700;
-      color: #a1caff;
+      font-size: 2.4em;
     }
-    main {
+    .menu, .game-section, .success, .powerups {
       width: 90%;
       max-width: 480px;
-      margin-top: 20px;
-      background: #022c43;
+      background: #03396c;
+      margin: 25px 0;
       border-radius: 20px;
       padding: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.9);
-    }
-    .stats, .items, .launch, .powerups {
-      margin-top: 15px;
-    }
-    .stats p, .progress-text {
-      font-size: 1.1em;
-      margin: 5px 0;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.7);
     }
     button {
-      font-size: 1em;
-      padding: 10px 15px;
-      margin: 5px;
+      font-size: 1.1em;
+      padding: 12px 25px;
+      margin: 10px 6px 0 6px;
       border: none;
       border-radius: 12px;
       cursor: pointer;
-      background: #0f4c75;
-      color: #a1caff;
-      box-shadow: 0 2px 6px #0f4c75;
-      transition: background-color 0.3s ease;
+      background: #55a630;
+      color: white;
+      transition: background 0.3s;
     }
-    button:hover:not(:disabled) {
-      background: #3282b8;
-      box-shadow: 0 3px 10px #3282b8;
+    button:hover {
+      background: #4a8e28;
     }
-    button:disabled {
-      background: #555;
-      cursor: not-allowed;
-      box-shadow: none;
-      color: #999;
+    .btn-secondary {
+      background: #0288d1;
     }
-    .item-card {
+    .btn-secondary:hover {
+      background: #026fa0;
+    }
+    .hidden {
+      display: none;
+    }
+    .stats p, .distance-info p {
+      font-size: 1.2em;
+      margin: 8px 0;
+    }
+    .items-container, .powerups-container {
+      margin-top: 20px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .item-card, .powerup-card {
+      background: #055a8c;
+      margin-bottom: 12px;
+      padding: 14px 20px;
+      border-radius: 15px;
       display: flex;
       justify-content: space-between;
-      background: #144d6e;
-      border-radius: 12px;
-      padding: 12px 15px;
-      margin: 10px 0;
       align-items: center;
       box-shadow: 0 3px 10px rgba(0,0,0,0.5);
     }
     .item-info {
-      flex: 1;
+      max-width: 65%;
     }
-    .item-info span {
-      display: block;
-      font-weight: 600;
-      font-size: 1.05em;
+    .item-info strong {
+      font-size: 1.3em;
     }
-    .item-stats {
-      font-size: 0.9em;
-      color: #a1caff;
-      margin-top: 3px;
-    }
-    .item-controls {
-      text-align: right;
+    .btn-small {
+      padding: 8px 16px;
+      font-size: 1em;
+      border-radius: 10px;
     }
     .upgrade-btn {
-      margin-left: 10px;
-      background: #ffb703;
-      color: #000;
-      font-weight: 700;
-      box-shadow: 0 2px 8px #ffb703;
+      background: #f0a500;
     }
-    .powerup-btn {
-      background: #e76f51;
-      font-weight: 700;
-      box-shadow: 0 2px 8px #e76f51;
+    .upgrade-btn:hover {
+      background: #d18e00;
     }
-    .progress-bar-container {
-      background: #12344a;
-      border-radius: 10px;
-      height: 20px;
-      margin-top: 10px;
-      overflow: hidden;
-      box-shadow: inset 0 2px 6px rgba(255,255,255,0.1);
+    .launch-section {
+      text-align: center;
+      margin-top: 25px;
     }
     .progress-bar {
-      background: #ffb703;
-      height: 100%;
-      width: 0%;
-      transition: width 0.3s ease;
+      height: 24px;
+      width: 100%;
+      background: #021f4a;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 15px 0;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.7);
     }
-    footer {
-      margin-top: 40px;
-      padding: 10px;
-      font-size: 0.8em;
-      color: #555;
-      user-select: none;
+    .progress-bar-fill {
+      height: 100%;
+      background: #55a630;
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+    .distance-info {
+      margin-top: 20px;
+      font-size: 1.2em;
+      color: #a3d2ca;
+    }
+    @media (max-width: 520px) {
+      .item-info {
+        max-width: 55%;
+      }
+      button {
+        width: 100%;
+        margin: 10px 0 0 0;
+      }
+      .item-card, .powerup-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .btn-small {
+        margin-top: 8px;
+      }
     }
   </style>
 </head>
 <body>
 
-<header>
-  <h1>🚀 Fusée Clicker - Vers l’Espace</h1>
-</header>
+  <header>
+    <h1>🚀 Space Rocket Builder</h1>
+  </header>
 
-<main>
+  <div class="menu">
+    <button id="startBtn">Commencer</button>
+    <button id="resetBtn" class="btn-secondary">Réinitialiser</button>
+  </div>
 
-  <section class="stats">
-    <p><strong>Distance Max Atteinte :</strong> <span id="distanceMax">0</span> km</p>
-    <p><strong>Distance Restante :</strong> <span id="distanceLeft">1000000</span> km</p>
-    <p><strong>Argent :</strong> <span id="money">0</span> €</p>
-    <p><strong>Distance par clic :</strong> <span id="distPerClick">1</span> km</p>
-    <p><strong>Distance par seconde :</strong> <span id="distPerSec">0</span> km</p>
-  </section>
-
-  <section class="items">
-    <h2>🛠️ Construis ta fusée</h2>
-    <div id="itemsContainer">
-      <!-- Items ajoutés dynamiquement -->
+  <div class="game-section hidden">
+    <div class="stats">
+      <p><i class="fas fa-coins"></i> Argent : <span id="money">0</span> €</p>
+      <p><i class="fas fa-mouse-pointer"></i> Par clic : <span id="distPerClick">1</span> km</p>
+      <p><i class="fas fa-clock"></i> Par seconde : <span id="distPerSec">0</span> km</p>
+      <p class="distance-info">
+        🚀 Distance max fusée : <span id="distanceMax">0</span> km<br />
+        🎯 Distance à parcourir pour atteindre l'espace : <span id="distanceLeft">100000</span> km
+      </p>
+      <button id="workBtn">🛠️ Travailler (clic)</button>
+      <button id="launchBtn" class="btn-secondary">🚀 Lancer la fusée</button>
+      <button id="backToMenuFromGame" class="btn-secondary">Retour au menu</button>
     </div>
-  </section>
 
-  <section class="powerups">
-    <h2>⚡ Power-ups</h2>
-    <button id="doubleClick" class="powerup-btn" disabled>Double distance clic (30s) - Coût: 500 €</button>
-    <button id="doubleAuto" class="powerup-btn" disabled>Double distance auto (30s) - Coût: 800 €</button>
-    <p id="powerupStatus" style="margin-top:10px; font-style: italic;"></p>
-  </section>
+    <div class="items-container" id="itemsContainer"></div>
 
-  <section class="launch">
-    <h2>🚀 Lancement de la fusée</h2>
-    <button id="launchBtn" disabled>Lancer la fusée (Coût : 1000 €)</button>
-    <div class="progress-bar-container" aria-label="Progression du lancement">
-      <div class="progress-bar" id="launchProgress"></div>
+    <div class="powerups">
+      <h3>Power-ups</h3>
+      <div class="powerups-container" id="powerupsContainer"></div>
     </div>
-    <p class="progress-text" id="launchText"></p>
-  </section>
 
-</main>
+    <div class="launch-section">
+      <div class="progress-bar" title="Progression du dernier lancement">
+        <div class="progress-bar-fill" id="launchProgress"></div>
+      </div>
+      <p id="launchStatus">Prêt pour un lancement.</p>
+    </div>
+  </div>
 
-<footer>
-  Construis ta fusée, améliore tes équipements et atteins 1 000 000 km pour conquérir l’espace !
-</footer>
+  <script>
+    // --- VARIABLES & DATA ---
 
-<script>
-  // Constants
-  const TARGET_DISTANCE = 1_000_000; // 1 million km pour l’espace
-  const LAUNCH_COST = 1000;
-  const POWERUP_DURATION = 30 * 1000; // 30 secondes en ms
+    let money = 0;
+    let distPerClick = 1;
+    let distPerSec = 0;
+    let distanceMax = 0; // max distance fusée atteinte
+    const distanceToSpace = 100000; // km, objectif final
 
-  // Game state variables
-  let money = parseFloat(localStorage.getItem("money")) || 0;
-  let distPerClick = parseFloat(localStorage.getItem("distPerClick")) || 1;
-  let distPerSec = parseFloat(localStorage.getItem("distPerSec")) || 0;
-  let distanceMax = parseFloat(localStorage.getItem("distanceMax")) || 0;
-
-  // Items définis avec base cost, distance boost per unit, et upgrade multiplier
-  let items = {
-    engine: { 
-      name: "Moteur basique", 
-      baseCost: 200, 
-      quantity: 0, 
-      distBoost: 10, 
-      upgradeLevel: 0, 
-      upgradeCost: 150, 
-      cost: 200,
-      visible: false
-    },
-    fuelTank: { 
-      name: "Réservoir de carburant", 
-      baseCost: 500, 
-      quantity: 0, 
-      distBoost: 25, 
-      upgradeLevel: 0, 
-      upgradeCost: 400, 
-      cost: 500,
-      visible: false
-    },
-    cockpit: { 
-      name: "Cockpit amélioré", 
-      baseCost: 1200, 
-      quantity: 0, 
-      distBoost: 60, 
-      upgradeLevel: 0, 
-      upgradeCost: 1000, 
-      cost: 1200,
-      visible: false
-    },
-    navigation: { 
-      name: "Système de navigation", 
-      baseCost: 3000, 
-      quantity: 0, 
-      distBoost: 150, 
-      upgradeLevel: 0, 
-      upgradeCost: 2500, 
-      cost: 3000,
-      visible: false
-    },
-    heatShield: { 
-      name: "Bouclier thermique", 
-      baseCost: 7500, 
-      quantity: 0, 
-      distBoost: 400, 
-      upgradeLevel: 0, 
-      upgradeCost: 6000, 
-      cost: 7500,
-      visible: false
-    },
-    satellite: { 
-      name: "Satellite", 
-      baseCost: 15000, 
-      quantity: 0, 
-      distBoost: 900, 
-      upgradeLevel: 0, 
-      upgradeCost: 12000, 
-      cost: 15000,
-      visible: false
-    },
-    spaceStationModule: {
-      name: "Module station spatiale",
-      baseCost: 40000,
-      quantity: 0,
-      distBoost: 2500,
-      upgradeLevel: 0,
-      upgradeCost: 35000,
-      cost: 40000,
-      visible: false
-    },
-  };
-
-  // Powerups state
-  let powerups = {
-    doubleClick: { active: false, timeoutId: null, cost: 500 },
-    doubleAuto: { active: false, timeoutId: null, cost: 800 },
-  };
-
-  // Launch state
-  let launchInProgress = false;
-
-  // DOM Elements
-  const moneyEl = document.getElementById("money");
-  const distPerClickEl = document.getElementById("distPerClick");
-  const distPerSecEl = document.getElementById("distPerSec");
-  const distanceMaxEl = document.getElementById("distanceMax");
-  const distanceLeftEl = document.getElementById("distanceLeft");
-  const itemsContainer = document.getElementById("itemsContainer");
-  const launchBtn = document.getElementById("launchBtn");
-  const launchProgressBar = document.getElementById("launchProgress");
-  const launchText = document.getElementById("launchText");
-  const powerupDoubleClickBtn = document.getElementById("doubleClick");
-  const powerupDoubleAutoBtn = document.getElementById("doubleAuto");
-  const powerupStatusEl = document.getElementById("powerupStatus");
-
-  // --- Fonctions de mise à jour ---
-  function updateDisplay() {
-    moneyEl.textContent = Math.floor(money);
-    distPerClickEl.textContent = distPerClick.toFixed(1);
-    distPerSecEl.textContent = distPerSec.toFixed(1);
-    distanceMaxEl.textContent = distanceMax.toFixed(0);
-    let distLeft = Math.max(TARGET_DISTANCE - distanceMax, 0);
-    distanceLeftEl.textContent = distLeft.toFixed(0);
-
-    // Activer ou désactiver le bouton lancement selon argent et distance max
-    launchBtn.disabled = money < LAUNCH_COST || distanceMax <= 0 || launchInProgress;
-
-    // Activer/désactiver powerups selon argent
-    powerupDoubleClickBtn.disabled = money < powerups.doubleClick.cost || powerups.doubleClick.active;
-    powerupDoubleAutoBtn.disabled = money < powerups.doubleAuto.cost || powerups.doubleAuto.active;
-
-    // Met à jour visibilité items selon argent
-    for(let key in items){
-      if(money >= items[key].baseCost){
-        items[key].visible = true;
-      } else if(items[key].quantity === 0){
-        items[key].visible = false;
+    // Items (parties de la fusée)
+    const items = {
+      "engine": {
+        name: "Moteur de base",
+        baseCost: 200,
+        cost: 200,
+        quantity: 0,
+        upgradeLevel: 0,
+        upgradeCost: 100,
+        distBoostClick: 0.2,
+        distBoostSec: 0.1,
+        visible: false
+      },
+      "fuelTank": {
+        name: "Réservoir de carburant",
+        baseCost: 800,
+        cost: 800,
+        quantity: 0,
+        upgradeLevel: 0,
+        upgradeCost: 400,
+        distBoostClick: 0.8,
+        distBoostSec: 0.4,
+        visible: false
+      },
+      "navigation": {
+        name: "Système de navigation",
+        baseCost: 2500,
+        cost: 2500,
+        quantity: 0,
+        upgradeLevel: 0,
+        upgradeCost: 1250,
+        distBoostClick: 2,
+        distBoostSec: 1,
+        visible: false
+      },
+      "structure": {
+        name: "Structure renforcée",
+        baseCost: 7000,
+        cost: 7000,
+        quantity: 0,
+        upgradeLevel: 0,
+        upgradeCost: 3500,
+        distBoostClick: 6,
+        distBoostSec: 3,
+        visible: false
+      },
+      "controlUnit": {
+        name: "Unité de contrôle avancée",
+        baseCost: 20000,
+        cost: 20000,
+        quantity: 0,
+        upgradeLevel: 0,
+        upgradeCost: 10000,
+        distBoostClick: 20,
+        distBoostSec: 10,
+        visible: false
       }
-    }
-    renderItems();
+    };
 
-    saveGame();
-  }
+    // Powerups
+    const powerups = {
+      "doubleClick": {
+        name: "Double clic",
+        cost: 1000,
+        effect: () => { distPerClick *= 2; },
+        purchased: false
+      },
+      "autoBoost": {
+        name: "Boost automatique x2",
+        cost: 3000,
+        effect: () => { distPerSec *= 2; },
+        purchased: false
+      },
+      "cheapLaunch": {
+        name: "Lancement économique",
+        cost: 5000,
+        effect: () => { launchCostMultiplier = 0.5; },
+        purchased: false
+      }
+    };
 
-  // Sauvegarde dans localStorage
-  function saveGame(){
-    localStorage.setItem("money", money);
-    localStorage.setItem("distPerClick", distPerClick);
-    localStorage.setItem("distPerSec", distPerSec);
-    localStorage.setItem("distanceMax", distanceMax);
+    // Launch variables
+    let launchInProgress = false;
+    let launchProgressPercent = 0;
+    let launchCostMultiplier = 1;
+    const baseLaunchCost = 1000;
 
-    for(let key in items){
-      localStorage.setItem(key+"_quantity", items[key].quantity);
-      localStorage.setItem(key+"_upgrade", items[key].upgradeLevel);
-      localStorage.setItem(key+"_cost", items[key].cost);
-      localStorage.setItem(key+"_upgradeCost", items[key].upgradeCost);
-      localStorage.setItem(key+"_visible", items[key].visible);
-    }
-  }
+    // --- DOM ELEMENTS ---
+    const moneySpan = document.getElementById("money");
+    const distPerClickSpan = document.getElementById("distPerClick");
+    const distPerSecSpan = document.getElementById("distPerSec");
+    const distanceMaxSpan = document.getElementById("distanceMax");
+    const distanceLeftSpan = document.getElementById("distanceLeft");
+    const itemsContainer = document.getElementById("itemsContainer");
+    const powerupsContainer = document.getElementById("powerupsContainer");
+    const launchProgressFill = document.getElementById("launchProgress");
+    const launchStatus = document.getElementById("launchStatus");
 
-  // Chargement sauvegarde
-  function loadGame(){
-    money = parseFloat(localStorage.getItem("money")) || 0;
-    distPerClick = parseFloat(localStorage.getItem("distPerClick")) || 1;
-    distPerSec = parseFloat(localStorage.getItem("distPerSec")) || 0;
-    distanceMax = parseFloat(localStorage.getItem("distanceMax")) || 0;
+    // --- FONCTIONS ---
 
-    for(let key in items){
-      items[key].quantity = parseInt(localStorage.getItem(key+"_quantity")) || 0;
-      items[key].upgradeLevel = parseInt(localStorage.getItem(key+"_upgrade")) || 0;
-      items[key].cost = parseFloat(localStorage.getItem(key+"_cost")) || items[key].baseCost;
-      items[key].upgradeCost = parseFloat(localStorage.getItem(key+"_upgradeCost")) || items[key].upgradeCost;
-      items[key].visible = (localStorage.getItem(key+"_visible") === "true") || false;
-    }
-  }
+    function updateDisplay() {
+      moneySpan.textContent = Math.floor(money);
+      distPerClickSpan.textContent = distPerClick.toFixed(1);
+      distPerSecSpan.textContent = distPerSec.toFixed(1);
+      distanceMaxSpan.textContent = distanceMax.toFixed(1);
+      let distLeft = distanceToSpace - distanceMax;
+      if(distLeft < 0) distLeft = 0;
+      distanceLeftSpan.textContent = distLeft.toFixed(1);
 
-  // Calculer la distance max en fonction des items et upgrades
-  function calcDistanceMax(){
-    let dist = 0;
-    for(let key in items){
-      let base = items[key].distBoost;
-      let lvl = items[key].upgradeLevel;
-      // chaque upgrade augmente la puissance par 50% par niveau
-      let powerMultiplier = 1 + 0.5 * lvl;
-      dist += items[key].quantity * base * powerMultiplier;
-    }
-    distanceMax = dist;
-    distPerClick = 1; // de base
-    distPerSec = 0;
-
-    // Dist par clic = base 1 + 20% de la distanceMax (environ)
-    distPerClick += distanceMax * 0.2;
-
-    // Dist par seconde = 10% de distanceMax
-    distPerSec += distanceMax * 0.1;
-
-    // Si powerup actif, doubler distPerClick ou distPerSec
-    if(powerups.doubleClick.active) distPerClick *= 2;
-    if(powerups.doubleAuto.active) distPerSec *= 2;
-  }
-
-  // Fonction d’achat d’items
-  function buyItem(key){
-    let item = items[key];
-    if(money >= item.cost){
-      money -= item.cost;
-      item.quantity++;
-      // le coût augmente de 20% à chaque achat
-      item.cost = Math.floor(item.cost * 1.2);
-      calcDistanceMax();
-      updateDisplay();
-    } else {
-      alert("Pas assez d'argent pour acheter "+item.name);
-    }
-  }
-
-  // Fonction amélioration items
-  function upgradeItem(key){
-    let item = items[key];
-    if(money >= item.upgradeCost){
-      money -= item.upgradeCost;
-      item.upgradeLevel++;
-      // Le coût d’upgrade augmente plus vite (x2)
-      item.upgradeCost = Math.floor(item.upgradeCost * 2);
-      calcDistanceMax();
-      updateDisplay();
-    } else {
-      alert("Pas assez d'argent pour améliorer "+item.name);
-    }
-  }
-
-  // Affichage des items
-  function renderItems(){
-    itemsContainer.innerHTML = "";
-    for(let key in items){
-      let item = items[key];
-      if(!item.visible && item.quantity === 0) continue;
-
-      let div = document.createElement("div");
-      div.className = "item-card";
-
-      div.innerHTML = `
-        <div class="item-info">
-          <span>${item.name}</span>
-          <div class="item-stats">
-            Quantité: ${item.quantity} | Distance unitaire: ${item.distBoost} km<br/>
-            Niveau d'amélioration: ${item.upgradeLevel} (x${(1 + 0.5 * item.upgradeLevel).toFixed(2)})<br/>
-            Prix achat: ${item.cost} € | Prix amélioration: ${item.upgradeCost} €
-          </div>
-        </div>
-        <div class="item-controls">
-          <button ${money < item.cost ? "disabled" : ""} onclick="buyItem('${key}')">Acheter</button>
-          <button class="upgrade-btn" ${money < item.upgradeCost ? "disabled" : ""} onclick="upgradeItem('${key}')">Améliorer</button>
-        </div>
-      `;
-      itemsContainer.appendChild(div);
-    }
-  }
-
-  // Gestion clic manuel
-  document.body.addEventListener("click", () => {
-    if(launchInProgress) return; // pas de clic pendant lancement
-
-    money += distPerClick;
-    updateDisplay();
-  });
-
-  // Ajout distance auto chaque seconde
-  setInterval(() => {
-    if(launchInProgress) return;
-    money += distPerSec;
-    updateDisplay();
-  }, 1000);
-
-  // Powerups
-  function activatePowerup(type){
-    if(money < powerups[type].cost) return alert("Pas assez d'argent");
-    if(powerups[type].active) return alert("Powerup déjà actif");
-
-    money -= powerups[type].cost;
-    powerups[type].active = true;
-    updateDisplay();
-    powerupStatusEl.textContent = `${type === "doubleClick" ? "Double distance clic" : "Double distance auto"} activé pour 30 secondes !`;
-
-    powerups[type].timeoutId = setTimeout(() => {
-      powerups[type].active = false;
-      powerupStatusEl.textContent = "";
-      calcDistanceMax();
-      updateDisplay();
-    }, POWERUP_DURATION);
-
-    calcDistanceMax();
-    updateDisplay();
-  }
-
-  powerupDoubleClickBtn.addEventListener("click", () => activatePowerup("doubleClick"));
-  powerupDoubleAutoBtn.addEventListener("click", () => activatePowerup("doubleAuto"));
-
-  // Lancement de la fusée
-  launchBtn.addEventListener("click", () => {
-    if(launchInProgress) return;
-    if(money < LAUNCH_COST){
-      alert("Pas assez d'argent pour lancer la fusée !");
-      return;
-    }
-    if(distanceMax <= 0){
-      alert("Tu dois construire ta fusée pour la lancer !");
-      return;
-    }
-
-    money -= LAUNCH_COST;
-    updateDisplay();
-    launchInProgress = true;
-    launchText.textContent = "Lancement en cours...";
-    launchProgressBar.style.width = "0%";
-
-    let progress = 0;
-    const progressSpeed = 1; // % par intervalle (peut changer pour ralentir progression)
-    const intervalTime = 100; // ms
-
-    let launchInterval = setInterval(() => {
-      progress += progressSpeed;
-      if(progress > 100) progress = 100;
-      launchProgressBar.style.width = progress + "%";
-
-      if(progress >= 100){
-        clearInterval(launchInterval);
-        launchInProgress = false;
-
-        // Calcul résultat du lancement, distance atteinte = distanceMax * facteur aléatoire (80% - 100%)
-        let facteur = 0.8 + Math.random() * 0.2;
-        let distanceAtteinte = Math.floor(distanceMax * facteur);
-        launchText.textContent = `Fusée a atteint ${distanceAtteinte} km !`;
-
-        // Récompense en argent en fonction de la distance atteinte (1€ = 1km)
-        money += distanceAtteinte;
-        updateDisplay();
-
-        // Si atteint la cible, message de victoire
-        if(distanceAtteinte >= TARGET_DISTANCE){
-          alert("🎉 Félicitations ! Ta fusée a atteint l'espace ! Tu as gagné !");
-          resetGame();
+      // Affichage des items selon visibilité
+      itemsContainer.innerHTML = "";
+      for(let key in items){
+        // Mise à jour visibilité : visible si quantity > 0 ou si assez d'argent pour le baseCost (premier item visible forcé au load)
+        if(money >= items[key].baseCost || items[key].quantity > 0 || items[key].visible){
+          items[key].visible = true;
+          const it = items[key];
+          // Création carte item
+          const div = document.createElement("div");
+          div.classList.add("item-card");
+          div.innerHTML = `
+            <div class="item-info">
+              <strong>${it.name}</strong><br/>
+              Quantité : ${it.quantity} | Amélioration : +${it.upgradeLevel} (Boost clic: ${(it.distBoostClick * (1 + 0.5 * it.upgradeLevel)).toFixed(2)} km, boost sec: ${(it.distBoostSec * (1 + 0.5 * it.upgradeLevel)).toFixed(2)} km)
+            </div>
+            <div>
+              <button class="btn-small" onclick="buyItem('${key}')">Acheter (${Math.floor(it.cost)}€)</button><br/>
+              <button class="btn-small upgrade-btn" onclick="upgradeItem('${key}')" ${it.quantity === 0 ? "disabled" : ""}>Améliorer (${Math.floor(it.upgradeCost)}€)</button>
+            </div>
+          `;
+          itemsContainer.appendChild(div);
+        } else {
+          items[key].visible = false;
         }
       }
-    }, intervalTime);
-  });
 
-  // Reset complet (optionnel)
-  function resetGame(){
-    money = 0;
-    distPerClick = 1;
-    distPerSec = 0;
-    distanceMax = 0;
-    for(let key in items){
-      items[key].quantity = 0;
-      items[key].upgradeLevel = 0;
-      items[key].cost = items[key].baseCost;
-      items[key].upgradeCost = items[key].upgradeCost;
-      items[key].visible = false;
+      // Affichage powerups
+      powerupsContainer.innerHTML = "";
+      for(let key in powerups){
+        const pu = powerups[key];
+        if(!pu.purchased){
+          const div = document.createElement("div");
+          div.classList.add("powerup-card");
+          div.innerHTML = `
+            <div class="item-info"><strong>${pu.name}</strong><br/>Coût : ${pu.cost}€</div>
+            <div><button class="btn-small" onclick="buyPowerup('${key}')">Acheter</button></div>
+          `;
+          powerupsContainer.appendChild(div);
+        } else {
+          const div = document.createElement("div");
+          div.classList.add("powerup-card");
+          div.innerHTML = `
+            <div class="item-info"><strong>${pu.name}</strong> <span style="color:#2ecc71;">(Acquis)</span></div>
+          `;
+          powerupsContainer.appendChild(div);
+        }
+      }
     }
-    powerups.doubleClick.active = false;
-    powerups.doubleAuto.active = false;
-    powerupStatusEl.textContent = "";
-    updateDisplay();
-  }
 
-  // Expose fonctions pour boutons inline
-  window.buyItem = buyItem;
-  window.upgradeItem = upgradeItem;
+    function buyItem(key){
+      const it = items[key];
+      if(money >= it.cost){
+        money -= it.cost;
+        it.quantity++;
+        // Augmentation du coût pour le prochain achat (+15%)
+        it.cost = Math.ceil(it.cost * 1.15);
+        recalcBoosts();
+        updateDisplay();
+        saveGame();
+      } else {
+        alert("Pas assez d'argent pour acheter cet item !");
+      }
+    }
 
-  // Initialisation
-  loadGame();
-  calcDistanceMax();
-  updateDisplay();
+    function upgradeItem(key){
+      const it = items[key];
+      if(it.quantity === 0){
+        alert("Vous devez posséder cet item pour l'améliorer !");
+        return;
+      }
+      if(money >= it.upgradeCost){
+        money -= it.upgradeCost;
+        it.upgradeLevel++;
+        it.upgradeCost = Math.ceil(it.upgradeCost * 1.5);
+        recalcBoosts();
+        updateDisplay();
+        saveGame();
+      } else {
+        alert("Pas assez d'argent pour améliorer cet item !");
+      }
+    }
 
-</script>
+    function buyPowerup(key){
+      const pu = powerups[key];
+      if(money >= pu.cost && !pu.purchased){
+        money -= pu.cost;
+        pu.purchased = true;
+        pu.effect();
+        updateDisplay();
+        saveGame();
+      } else {
+        alert("Pas assez d'argent ou powerup déjà acheté !");
+      }
+    }
+
+    function recalcBoosts(){
+      distPerClick = 1;
+      distPerSec = 0;
+      for(let key in items){
+        const it = items[key];
+        if(it.quantity > 0){
+          const boostClick = it.distBoostClick * (1 + 0.5 * it.upgradeLevel);
+          const boostSec = it.distBoostSec * (1 + 0.5 * it.upgradeLevel);
+          distPerClick += boostClick * it.quantity;
+          distPerSec += boostSec * it.quantity;
+        }
+      }
+      // Appliquer powerups (ex: double click)
+      for(let key in powerups){
+        if(powerups[key].purchased){
+          if(key === "doubleClick"){
+            distPerClick *= 2;
+          }
+          if(key === "autoBoost"){
+            distPerSec *= 2;
+          }
+        }
+      }
+    }
+
+    function workClick(){
+      money += distPerClick;
+      updateDisplay();
+      saveGame();
+    }
+
+    // Progression automatique par seconde
+    setInterval(() => {
+      money += distPerSec;
+      updateDisplay();
+      saveGame();
+    }, 1000);
+
+    // Lancement fusée
+    function launchRocket(){
+      if(launchInProgress) return; // Un lancement à la fois
+      const launchCost = baseLaunchCost * launchCostMultiplier;
+      if(money < launchCost){
+        alert("Pas assez d'argent pour lancer la fusée !");
+        return;
+      }
+      money -= launchCost;
+      launchInProgress = true;
+      launchProgressPercent = 0;
+      launchStatus.textContent = "Lancement en cours...";
+      launchProgressFill.style.width = "0%";
+
+      let launchInterval = setInterval(() => {
+        launchProgressPercent += 5 + (distPerSec * 0.1);
+        if(launchProgressPercent >= 100){
+          clearInterval(launchInterval);
+          launchInProgress = false;
+
+          // Calcul distance atteinte selon stats fusée
+          let distanceTravelled = distanceMax + distPerClick * 10 + distPerSec * 20;
+
+          if(distanceTravelled > distanceMax) {
+            distanceMax = distanceTravelled;
+            launchStatus.textContent = `Succès ! La fusée a atteint ${distanceMax.toFixed(1)} km.`;
+          } else {
+            launchStatus.textContent = `Lancement terminé. Distance maximale inchangée : ${distanceMax.toFixed(1)} km.`;
+          }
+
+          // Récompense argent selon distance
+          let reward = Math.floor(distanceTravelled / 50);
+          money += reward;
+          launchStatus.textContent += ` Vous avez gagné ${reward} € !`;
+
+          updateDisplay();
+          saveGame();
+        } else {
+          launchProgressFill.style.width = launchProgressPercent + "%";
+        }
+      }, 200);
+    }
+
+    // Sauvegarde dans localStorage
+    function saveGame(){
+      localStorage.setItem("money", money);
+      localStorage.setItem("distPerClick", distPerClick);
+      localStorage.setItem("distPerSec", distPerSec);
+      localStorage.setItem("distanceMax", distanceMax);
+      for(let key in items){
+        localStorage.setItem(key+"_quantity", items[key].quantity);
+        localStorage.setItem(key+"_upgrade", items[key].upgradeLevel);
+        localStorage.setItem(key+"_cost", items[key].cost);
+        localStorage.setItem(key+"_upgradeCost", items[key].upgradeCost);
+        localStorage.setItem(key+"_visible", items[key].visible);
+      }
+      for(let key in powerups){
+        localStorage.setItem(key+"_purchased", powerups[key].purchased);
+      }
+      localStorage.setItem("launchCostMultiplier", launchCostMultiplier);
+    }
+
+    // Chargement depuis localStorage
+    function loadGame(){
+      money = parseFloat(localStorage.getItem("money")) || 0;
+      distPerClick = parseFloat(localStorage.getItem("distPerClick")) || 1;
+      distPerSec = parseFloat(localStorage.getItem("distPerSec")) || 0;
+      distanceMax = parseFloat(localStorage.getItem("distanceMax")) || 0;
+      launchCostMultiplier = parseFloat(localStorage.getItem("launchCostMultiplier")) || 1;
+
+      for(let key in items){
+        items[key].quantity = parseInt(localStorage.getItem(key+"_quantity")) || 0;
+        items[key].upgradeLevel = parseInt(localStorage.getItem(key+"_upgrade")) || 0;
+        items[key].cost = parseFloat(localStorage.getItem(key+"_cost")) || items[key].baseCost;
+        items[key].upgradeCost = parseFloat(localStorage.getItem(key+"_upgradeCost")) || items[key].upgradeCost;
+        items[key].visible = (localStorage.getItem(key+"_visible") === "true") || false;
+      }
+
+      for(let key in powerups){
+        powerups[key].purchased = (localStorage.getItem(key+"_purchased") === "true") || false;
+      }
+
+      // Forcer visibilité premier item si non visible
+      const firstItemKey = Object.keys(items)[0];
+      if(!items[firstItemKey].visible){
+        items[firstItemKey].visible = true;
+      }
+
+      recalcBoosts();
+    }
+
+    function resetGame(){
+      if(confirm("Voulez-vous vraiment réinitialiser la partie ?")){
+        localStorage.clear();
+        money = 0;
+        distPerClick = 1;
+        distPerSec = 0;
+        distanceMax = 0;
+        launchCostMultiplier = 1;
+        for(let key in items){
+          items[key].quantity = 0;
+          items[key].upgradeLevel = 0;
+          items[key].cost = items[key].baseCost;
+          items[key].upgradeCost = items[key].upgradeCost;
+          items[key].visible = false;
+        }
+        for(let key in powerups){
+          powerups[key].purchased = false;
+        }
+        items[Object.keys(items)[0]].visible = true;
+        recalcBoosts();
+        updateDisplay();
+      }
+    }
+
+    // --- EVENTS ---
+
+    document.getElementById("startBtn").addEventListener("click", () => {
+      document.querySelector(".menu").classList.add("hidden");
+      document.querySelector(".game-section").classList.remove("hidden");
+      loadGame();
+      updateDisplay();
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", resetGame);
+
+    document.getElementById("workBtn").addEventListener("click", workClick);
+
+    document.getElementById("launchBtn").addEventListener("click", launchRocket);
+
+    document.getElementById("backToMenuFromGame").addEventListener("click", () => {
+      if(confirm("Retourner au menu ? La progression sera sauvegardée.")){
+        document.querySelector(".game-section").classList.add("hidden");
+        document.querySelector(".menu").classList.remove("hidden");
+        saveGame();
+      }
+    });
+
+    // --- INITIAL SETUP ---
+    // On force visibilité premier item pour l'affichage initial dans menu caché
+    items[Object.keys(items)[0]].visible = true;
+
+  </script>
 
 </body>
 </html>
