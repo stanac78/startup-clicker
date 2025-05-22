@@ -3,85 +3,183 @@
 <head>
   <meta charset="UTF-8">
   <title>💼 Start-up Clicker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google Font + Font Awesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a2d9f5e7e2.js" crossorigin="anonymous"></script>
   <style>
     body {
       font-family: 'Nunito', sans-serif;
-      background: linear-gradient(to right, #ece9e6, #ffffff);
-      text-align: center;
-      padding: 30px;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(145deg, #f2f6ff, #e5ecfb);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
       color: #333;
     }
 
-    h1 {
-      font-size: 2.5em;
-      margin-bottom: 10px;
+    header {
+      background: #ffffff;
+      width: 100%;
+      text-align: center;
+      padding: 20px 0;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     }
 
-    p, h2 {
+    h1 {
+      font-size: 2.2em;
+      margin: 0;
+    }
+
+    .menu {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .menu button {
+      font-size: 1.2em;
+      padding: 10px 20px;
+      margin: 10px;
+      background: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .stats, .upgrades, .illustration, .success, .game-section {
+      display: none;
+    }
+
+    .active {
+      display: block;
+    }
+
+    .stats, .success {
+      margin-top: 20px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    .stats p {
+      font-size: 1.2em;
+      margin: 10px 0;
+    }
+
+    .main-btn {
+      margin-top: 20px;
+      font-size: 1.1em;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 12px;
+      background: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+
+    .upgrades {
+      margin-top: 30px;
+      width: 90%;
+      max-width: 450px;
+    }
+
+    .upgrade-card {
+      background: #ffffff;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 15px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .upgrade-card span {
       font-size: 1.2em;
     }
 
-    .stats {
-      background: #fff;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-      display: inline-block;
-    }
-
-    button {
-      padding: 12px 20px;
-      font-size: 16px;
-      margin: 10px;
+    .upgrade-card button {
+      padding: 10px 20px;
       border: none;
-      border-radius: 10px;
-      background: #4caf50;
+      background: #1976d2;
       color: white;
+      border-radius: 10px;
+      font-size: 1em;
       cursor: pointer;
-      transition: background 0.3s ease;
     }
 
-    button:hover {
-      background: #43a047;
+    .illustration img {
+      margin-top: 20px;
+      max-width: 200px;
     }
 
-    .upgrade {
-      margin: 20px auto;
-      max-width: 300px;
+    .success p {
+      font-size: 1em;
+      margin: 5px;
     }
 
-    .emoji {
-      font-size: 1.4em;
+    @media (max-width: 500px) {
+      h1 { font-size: 1.7em; }
+      .main-btn, .menu button { width: 100%; }
     }
   </style>
 </head>
 <body>
-  <h1>💼 Start-up Clicker</h1>
-  <div class="stats">
-    <p>💰 Argent : <span id="money">0</span> €</p>
-    <p>🖱️ Par clic : <span id="gain">1</span> € | ⏱️ Par seconde : <span id="autoGain">0</span> €</p>
+
+  <header>
+    <h1>🚀 Start-up Clicker</h1>
+  </header>
+
+  <div class="menu">
+    <button onclick="startGame()">Commencer</button>
+    <button onclick="showSuccess()">Voir Succès</button>
+    <button onclick="resetGame()">Reset</button>
   </div>
 
-  <button onclick="work()">👨‍💻 Travailler (Clique)</button>
-
-  <h2>📈 Améliorations</h2>
-
-  <div class="upgrade">
-    <button onclick="buyUpgrade('pc')">🖥️ Acheter un PC (100€) [+1€/clic]</button>
+  <div class="illustration active">
+    <img id="character" src="https://cdn-icons-png.flaticon.com/512/2920/2920333.png" alt="personnage">
   </div>
 
-  <div class="upgrade">
-    <button onclick="buyUpgrade('freelancer')">👤 Engager un Freelance (250€) [+1€/s]</button>
+  <div class="game-section">
+    <div class="stats">
+      <p><i class="fas fa-coins"></i> Argent : <span id="money">0</span> €</p>
+      <p><i class="fas fa-mouse-pointer"></i> Par clic : <span id="gain">1</span> €</p>
+      <p><i class="fas fa-clock"></i> Par seconde : <span id="autoGain">0</span> €</p>
+      <button class="main-btn" onclick="work()">👨‍💻 Travailler</button>
+    </div>
+
+    <div class="upgrades">
+      <div class="upgrade-card">
+        <span>🖥️ PC (+1€/clic)</span>
+        <button onclick="buyUpgrade('pc')">100€</button>
+      </div>
+      <div class="upgrade-card">
+        <span>👤 Freelance (+1€/s)</span>
+        <button onclick="buyUpgrade('freelancer')">250€</button>
+      </div>
+      <div class="upgrade-card">
+        <span>🌐 Site Web (+3€/s)</span>
+        <button onclick="buyUpgrade('website')">500€</button>
+      </div>
+    </div>
   </div>
 
-  <div class="upgrade">
-    <button onclick="buyUpgrade('website')">🌐 Créer un Site Web (500€) [+3€/s]</button>
+  <div class="success">
+    <h2>🎯 Succès</h2>
+    <p id="successMoney">💰 Atteindre 1000€</p>
+    <p id="successClick">🖱️ Augmenter le clic à 10€</p>
+    <p id="successAuto">⚙️ Gagner 20€/s automatiquement</p>
   </div>
 
   <script>
-    // --- VARIABLES
     let money = parseFloat(localStorage.getItem("money")) || 0;
     let gainPerClick = parseFloat(localStorage.getItem("gainPerClick")) || 1;
     let gainPerSecond = parseFloat(localStorage.getItem("gainPerSecond")) || 0;
@@ -92,11 +190,20 @@
       website: { cost: 500, clickBoost: 0, autoBoost: 3 },
     };
 
-    // --- FONCTIONS
     function updateDisplay() {
       document.getElementById("money").textContent = Math.floor(money);
       document.getElementById("gain").textContent = gainPerClick;
       document.getElementById("autoGain").textContent = gainPerSecond;
+
+      if (money >= 1000) document.getElementById("successMoney").style.color = 'green';
+      if (gainPerClick >= 10) document.getElementById("successClick").style.color = 'green';
+      if (gainPerSecond >= 20) document.getElementById("successAuto").style.color = 'green';
+
+      if (gainPerClick >= 5 && gainPerClick < 10) {
+        document.getElementById("character").src = "https://cdn-icons-png.flaticon.com/512/2920/2920404.png";
+      } else if (gainPerClick >= 10) {
+        document.getElementById("character").src = "https://cdn-icons-png.flaticon.com/512/2920/2920213.png";
+      }
     }
 
     function work() {
@@ -111,8 +218,7 @@
         money -= upgrade.cost;
         gainPerClick += upgrade.clickBoost;
         gainPerSecond += upgrade.autoBoost;
-        upgrades[type].cost = Math.floor(upgrade.cost * 1.5); // Prix augmente
-        alert(`Tu as acheté : ${type}!`);
+        upgrades[type].cost = Math.floor(upgrade.cost * 1.5);
         updateDisplay();
         saveGame();
       } else {
@@ -132,7 +238,27 @@
       localStorage.setItem("gainPerSecond", gainPerSecond);
     }
 
-    setInterval(autoIncome, 1000); // Gains par seconde
+    function startGame() {
+      document.querySelector(".menu").style.display = "none";
+      document.querySelector(".game-section").classList.add("active");
+    }
+
+    function showSuccess() {
+      document.querySelector(".menu").style.display = "none";
+      document.querySelector(".success").classList.add("active");
+    }
+
+    function resetGame() {
+      if (confirm("Voulez-vous vraiment recommencer ?")) {
+        localStorage.clear();
+        money = 0;
+        gainPerClick = 1;
+        gainPerSecond = 0;
+        location.reload();
+      }
+    }
+
+    setInterval(autoIncome, 1000);
     updateDisplay();
   </script>
 </body>
