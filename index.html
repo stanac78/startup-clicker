@@ -97,9 +97,13 @@
       padding: 15px;
       border-radius: 15px;
       box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: space-between;
+    }
+
+    .upgrade-card.visible {
+      display: flex;
     }
 
     .upgrade-card span {
@@ -153,21 +157,30 @@
       <p><i class="fas fa-coins"></i> Argent : <span id="money">0</span> €</p>
       <p><i class="fas fa-mouse-pointer"></i> Par clic : <span id="gain">1</span> €</p>
       <p><i class="fas fa-clock"></i> Par seconde : <span id="autoGain">0</span> €</p>
+      <p><i class="fas fa-calendar-alt"></i> Par minute : <span id="perMinute">0</span> € | Par heure : <span id="perHour">0</span> € | Par jour : <span id="perDay">0</span> €</p>
       <button class="main-btn" onclick="work()">👨‍💻 Travailler</button>
     </div>
 
-    <div class="upgrades">
-      <div class="upgrade-card">
+    <div class="upgrades" id="upgradeContainer">
+      <div class="upgrade-card" id="pc">
         <span>🖥️ PC (+1€/clic)</span>
         <button onclick="buyUpgrade('pc')">100€</button>
       </div>
-      <div class="upgrade-card">
+      <div class="upgrade-card" id="freelancer">
         <span>👤 Freelance (+1€/s)</span>
         <button onclick="buyUpgrade('freelancer')">250€</button>
       </div>
-      <div class="upgrade-card">
+      <div class="upgrade-card" id="website">
         <span>🌐 Site Web (+3€/s)</span>
         <button onclick="buyUpgrade('website')">500€</button>
+      </div>
+      <div class="upgrade-card" id="agency">
+        <span>🏢 Agence (+10€/s)</span>
+        <button onclick="buyUpgrade('agency')">1500€</button>
+      </div>
+      <div class="upgrade-card" id="automation">
+        <span>🤖 Automatisation (+25€/s)</span>
+        <button onclick="buyUpgrade('automation')">5000€</button>
       </div>
     </div>
   </div>
@@ -188,12 +201,17 @@
       pc: { cost: 100, clickBoost: 1, autoBoost: 0 },
       freelancer: { cost: 250, clickBoost: 0, autoBoost: 1 },
       website: { cost: 500, clickBoost: 0, autoBoost: 3 },
+      agency: { cost: 1500, clickBoost: 0, autoBoost: 10 },
+      automation: { cost: 5000, clickBoost: 0, autoBoost: 25 },
     };
 
     function updateDisplay() {
       document.getElementById("money").textContent = Math.floor(money);
       document.getElementById("gain").textContent = gainPerClick;
       document.getElementById("autoGain").textContent = gainPerSecond;
+      document.getElementById("perMinute").textContent = gainPerSecond * 60;
+      document.getElementById("perHour").textContent = gainPerSecond * 3600;
+      document.getElementById("perDay").textContent = gainPerSecond * 86400;
 
       if (money >= 1000) document.getElementById("successMoney").style.color = 'green';
       if (gainPerClick >= 10) document.getElementById("successClick").style.color = 'green';
@@ -203,6 +221,13 @@
         document.getElementById("character").src = "https://cdn-icons-png.flaticon.com/512/2920/2920404.png";
       } else if (gainPerClick >= 10) {
         document.getElementById("character").src = "https://cdn-icons-png.flaticon.com/512/2920/2920213.png";
+      }
+
+      for (let key in upgrades) {
+        const card = document.getElementById(key);
+        if (money >= upgrades[key].cost * 0.5) {
+          card.classList.add("visible");
+        }
       }
     }
 
