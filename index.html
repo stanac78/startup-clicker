@@ -162,13 +162,18 @@
       document.getElementById("money").textContent = Math.floor(money);
       document.getElementById("gain").textContent = gainPerClick;
       document.getElementById("autoGain").textContent = gainPerSecond;
-      document.getElementById("perMinute").textContent = gainPerSecond * 60;
-      document.getElementById("perHour").textContent = gainPerSecond * 3600;
-      document.getElementById("perDay").textContent = gainPerSecond * 86400;
+      document.getElementById("perMinute").textContent = (gainPerSecond * 60).toFixed(1);
+      document.getElementById("perHour").textContent = (gainPerSecond * 3600).toFixed(1);
+      document.getElementById("perDay").textContent = (gainPerSecond * 86400).toFixed(1);
 
       if (money >= 1000) document.getElementById("successMoney").style.color = "green";
+      else document.getElementById("successMoney").style.color = "black";
+
       if (gainPerClick >= 10) document.getElementById("successClick").style.color = "green";
+      else document.getElementById("successClick").style.color = "black";
+
       if (gainPerSecond >= 20) document.getElementById("successAuto").style.color = "green";
+      else document.getElementById("successAuto").style.color = "black";
 
       if (gainPerClick >= 5 && gainPerClick < 10) {
         document.getElementById("character").src = "https://cdn-icons-png.flaticon.com/512/2920/2920404.png";
@@ -176,15 +181,6 @@
         document.getElementById("character").src = "https://cdn-icons-png.flaticon.com/512/2920/2920213.png";
       } else {
         document.getElementById("character").src = "https://cdn-icons-png.flaticon.com/512/2920/2920333.png";
-      }
-
-      for (let key in upgrades) {
-        const card = document.getElementById(key);
-        if (money >= upgrades[key].cost * 0.5) {
-          card.classList.add("visible");
-        } else {
-          card.classList.remove("visible");
-        }
       }
     }
 
@@ -201,6 +197,9 @@
         gainPerClick += upgrade.clickBoost;
         gainPerSecond += upgrade.autoBoost;
         upgrades[type].cost = Math.floor(upgrade.cost * 1.5);
+        // Update cost display button text:
+        const btn = document.querySelector(`#${type} button`);
+        if (btn) btn.textContent = upgrades[type].cost + "€";
         updateDisplay();
         saveGame();
       } else {
@@ -220,35 +219,48 @@
       localStorage.setItem("gainPerSecond", gainPerSecond);
     }
 
-    // Navigation functions
+    // Gestion des sections (menu, jeu, succès, illustration)
     const menuDiv = document.querySelector(".menu");
     const gameSection = document.querySelector(".game-section");
     const successSection = document.querySelector(".success");
     const illustrationDiv = document.querySelector(".illustration");
 
+    function showSection(sectionName) {
+      const sections = {
+        menu: menuDiv,
+        game: gameSection,
+        success: successSection,
+      };
+      // Illustration visible uniquement dans le jeu
+      if (sectionName === "game") {
+        illustrationDiv.classList.remove("hidden");
+      } else {
+        illustrationDiv.classList.add("hidden");
+      }
+
+      for (const key in sections) {
+        if (key === sectionName) {
+          sections[key].classList.remove("hidden");
+        } else {
+          sections[key].classList.add("hidden");
+        }
+      }
+    }
+
     document.getElementById("startBtn").addEventListener("click", () => {
-      menuDiv.classList.add("hidden");
-      successSection.classList.add("hidden");
-      gameSection.classList.remove("hidden");
-      illustrationDiv.classList.remove("hidden");
+      showSection("game");
     });
 
     document.getElementById("showSuccessBtn").addEventListener("click", () => {
-      menuDiv.classList.add("hidden");
-      gameSection.classList.add("hidden");
-      illustrationDiv.classList.add("hidden");
-      successSection.classList.remove("hidden");
+      showSection("success");
     });
 
     document.getElementById("backToMenuFromSuccess").addEventListener("click", () => {
-      successSection.classList.add("hidden");
-      menuDiv.classList.remove("hidden");
+      showSection("menu");
     });
 
     document.getElementById("backToMenuFromGame").addEventListener("click", () => {
-      gameSection.classList.add("hidden");
-      illustrationDiv.classList.add("hidden");
-      menuDiv.classList.remove("hidden");
+      showSection("menu");
     });
 
     document.getElementById("resetBtn").addEventListener("click", () => {
@@ -258,10 +270,7 @@
         gainPerClick = 1;
         gainPerSecond = 0;
         updateDisplay();
-        menuDiv.classList.remove("hidden");
-        gameSection.classList.add("hidden");
-        successSection.classList.add("hidden");
-        illustrationDiv.classList.add("hidden");
+        showSection("menu");
       }
     });
 
