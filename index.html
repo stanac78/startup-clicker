@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>💼 Start-up Clicker</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Google Font + Font Awesome -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <title>🚀 Start-up Clicker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet" />
   <script src="https://kit.fontawesome.com/a2d9f5e7e2.js" crossorigin="anonymous"></script>
   <style>
     body {
@@ -20,119 +18,72 @@
       min-height: 100vh;
       color: #333;
     }
-
     header {
-      background: #ffffff;
+      background: #fff;
       width: 100%;
       text-align: center;
       padding: 20px 0;
       box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     }
-
     h1 {
       font-size: 2.2em;
       margin: 0;
     }
-
-    .menu {
-      text-align: center;
-      margin-top: 30px;
-    }
-
-    .menu button {
-      font-size: 1.2em;
-      padding: 10px 20px;
-      margin: 10px;
-      background: #2196f3;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    .stats, .upgrades, .illustration, .success, .game-section {
-      display: none;
-    }
-
-    .active {
-      display: block;
-    }
-
-    .stats, .success {
-      margin-top: 20px;
-      background: #fff;
-      padding: 20px;
-      border-radius: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      text-align: center;
-      width: 90%;
-      max-width: 400px;
-    }
-
-    .stats p {
-      font-size: 1.2em;
-      margin: 10px 0;
-    }
-
-    .main-btn {
-      margin-top: 20px;
-      font-size: 1.1em;
-      padding: 15px 30px;
-      border: none;
-      border-radius: 12px;
-      background: #4CAF50;
-      color: white;
-      cursor: pointer;
-    }
-
-    .upgrades {
-      margin-top: 30px;
+    .menu, .stats, .upgrades, .illustration, .success {
       width: 90%;
       max-width: 450px;
+      margin-top: 30px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 20px;
+      text-align: center;
     }
-
+    .hidden {
+      display: none;
+    }
+    button {
+      font-size: 1.1em;
+      padding: 12px 25px;
+      margin: 10px 5px 0 5px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: #4CAF50;
+      color: white;
+    }
+    .btn-secondary {
+      background: #2196f3;
+      color: white;
+    }
     .upgrade-card {
-      background: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f9faff;
       margin: 10px 0;
-      padding: 15px;
+      padding: 12px 20px;
       border-radius: 15px;
       box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-      display: none;
-      align-items: center;
-      justify-content: space-between;
     }
-
-    .upgrade-card.visible {
-      display: flex;
-    }
-
-    .upgrade-card span {
-      font-size: 1.2em;
-    }
-
     .upgrade-card button {
-      padding: 10px 20px;
-      border: none;
       background: #1976d2;
       color: white;
+      padding: 8px 18px;
       border-radius: 10px;
       font-size: 1em;
       cursor: pointer;
     }
-
     .illustration img {
-      margin-top: 20px;
-      max-width: 200px;
+      max-width: 180px;
+      margin: 0 auto;
+      display: block;
     }
-
-    .success p {
-      font-size: 1em;
-      margin: 5px;
-    }
-
     @media (max-width: 500px) {
       h1 { font-size: 1.7em; }
-      .main-btn, .menu button { width: 100%; }
+      button { width: 100%; }
     }
   </style>
 </head>
@@ -143,22 +94,23 @@
   </header>
 
   <div class="menu">
-    <button onclick="startGame()">Commencer</button>
-    <button onclick="showSuccess()">Voir Succès</button>
-    <button onclick="resetGame()">Reset</button>
+    <button class="btn-primary" id="startBtn">Commencer</button>
+    <button class="btn-secondary" id="showSuccessBtn">Voir Succès</button>
+    <button class="btn-secondary" id="resetBtn">Reset</button>
   </div>
 
-  <div class="illustration active">
-    <img id="character" src="https://cdn-icons-png.flaticon.com/512/2920/2920333.png" alt="personnage">
+  <div class="illustration hidden">
+    <img id="character" src="https://cdn-icons-png.flaticon.com/512/2920/2920333.png" alt="personnage" />
   </div>
 
-  <div class="game-section">
+  <div class="game-section hidden">
     <div class="stats">
       <p><i class="fas fa-coins"></i> Argent : <span id="money">0</span> €</p>
       <p><i class="fas fa-mouse-pointer"></i> Par clic : <span id="gain">1</span> €</p>
       <p><i class="fas fa-clock"></i> Par seconde : <span id="autoGain">0</span> €</p>
       <p><i class="fas fa-calendar-alt"></i> Par minute : <span id="perMinute">0</span> € | Par heure : <span id="perHour">0</span> € | Par jour : <span id="perDay">0</span> €</p>
-      <button class="main-btn" onclick="work()">👨‍💻 Travailler</button>
+      <button class="btn-primary" id="workBtn">👨‍💻 Travailler</button>
+      <button class="btn-secondary" id="backToMenuFromGame">Retour</button>
     </div>
 
     <div class="upgrades" id="upgradeContainer">
@@ -185,11 +137,12 @@
     </div>
   </div>
 
-  <div class="success">
+  <div class="success hidden">
     <h2>🎯 Succès</h2>
     <p id="successMoney">💰 Atteindre 1000€</p>
     <p id="successClick">🖱️ Augmenter le clic à 10€</p>
     <p id="successAuto">⚙️ Gagner 20€/s automatiquement</p>
+    <button class="btn-secondary" id="backToMenuFromSuccess">Retour</button>
   </div>
 
   <script>
@@ -213,20 +166,24 @@
       document.getElementById("perHour").textContent = gainPerSecond * 3600;
       document.getElementById("perDay").textContent = gainPerSecond * 86400;
 
-      if (money >= 1000) document.getElementById("successMoney").style.color = 'green';
-      if (gainPerClick >= 10) document.getElementById("successClick").style.color = 'green';
-      if (gainPerSecond >= 20) document.getElementById("successAuto").style.color = 'green';
+      if (money >= 1000) document.getElementById("successMoney").style.color = "green";
+      if (gainPerClick >= 10) document.getElementById("successClick").style.color = "green";
+      if (gainPerSecond >= 20) document.getElementById("successAuto").style.color = "green";
 
       if (gainPerClick >= 5 && gainPerClick < 10) {
         document.getElementById("character").src = "https://cdn-icons-png.flaticon.com/512/2920/2920404.png";
       } else if (gainPerClick >= 10) {
         document.getElementById("character").src = "https://cdn-icons-png.flaticon.com/512/2920/2920213.png";
+      } else {
+        document.getElementById("character").src = "https://cdn-icons-png.flaticon.com/512/2920/2920333.png";
       }
 
       for (let key in upgrades) {
         const card = document.getElementById(key);
         if (money >= upgrades[key].cost * 0.5) {
           card.classList.add("visible");
+        } else {
+          card.classList.remove("visible");
         }
       }
     }
@@ -263,25 +220,52 @@
       localStorage.setItem("gainPerSecond", gainPerSecond);
     }
 
-    function startGame() {
-      document.querySelector(".menu").style.display = "none";
-      document.querySelector(".game-section").classList.add("active");
-    }
+    // Navigation functions
+    const menuDiv = document.querySelector(".menu");
+    const gameSection = document.querySelector(".game-section");
+    const successSection = document.querySelector(".success");
+    const illustrationDiv = document.querySelector(".illustration");
 
-    function showSuccess() {
-      document.querySelector(".menu").style.display = "none";
-      document.querySelector(".success").classList.add("active");
-    }
+    document.getElementById("startBtn").addEventListener("click", () => {
+      menuDiv.classList.add("hidden");
+      successSection.classList.add("hidden");
+      gameSection.classList.remove("hidden");
+      illustrationDiv.classList.remove("hidden");
+    });
 
-    function resetGame() {
+    document.getElementById("showSuccessBtn").addEventListener("click", () => {
+      menuDiv.classList.add("hidden");
+      gameSection.classList.add("hidden");
+      illustrationDiv.classList.add("hidden");
+      successSection.classList.remove("hidden");
+    });
+
+    document.getElementById("backToMenuFromSuccess").addEventListener("click", () => {
+      successSection.classList.add("hidden");
+      menuDiv.classList.remove("hidden");
+    });
+
+    document.getElementById("backToMenuFromGame").addEventListener("click", () => {
+      gameSection.classList.add("hidden");
+      illustrationDiv.classList.add("hidden");
+      menuDiv.classList.remove("hidden");
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
       if (confirm("Voulez-vous vraiment recommencer ?")) {
         localStorage.clear();
         money = 0;
         gainPerClick = 1;
         gainPerSecond = 0;
-        location.reload();
+        updateDisplay();
+        menuDiv.classList.remove("hidden");
+        gameSection.classList.add("hidden");
+        successSection.classList.add("hidden");
+        illustrationDiv.classList.add("hidden");
       }
-    }
+    });
+
+    document.getElementById("workBtn").addEventListener("click", work);
 
     setInterval(autoIncome, 1000);
     updateDisplay();
