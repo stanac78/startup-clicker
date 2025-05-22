@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>💼 Start-up Clicker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(to right, #ece9e6, #ffffff);
+      text-align: center;
+      padding: 30px;
+      color: #333;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    p, h2 {
+      font-size: 1.2em;
+    }
+
+    .stats {
+      background: #fff;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      margin: 10px;
+      border: none;
+      border-radius: 10px;
+      background: #4caf50;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #43a047;
+    }
+
+    .upgrade {
+      margin: 20px auto;
+      max-width: 300px;
+    }
+
+    .emoji {
+      font-size: 1.4em;
+    }
+  </style>
+</head>
+<body>
+  <h1>💼 Start-up Clicker</h1>
+  <div class="stats">
+    <p>💰 Argent : <span id="money">0</span> €</p>
+    <p>🖱️ Par clic : <span id="gain">1</span> € | ⏱️ Par seconde : <span id="autoGain">0</span> €</p>
+  </div>
+
+  <button onclick="work()">👨‍💻 Travailler (Clique)</button>
+
+  <h2>📈 Améliorations</h2>
+
+  <div class="upgrade">
+    <button onclick="buyUpgrade('pc')">🖥️ Acheter un PC (100€) [+1€/clic]</button>
+  </div>
+
+  <div class="upgrade">
+    <button onclick="buyUpgrade('freelancer')">👤 Engager un Freelance (250€) [+1€/s]</button>
+  </div>
+
+  <div class="upgrade">
+    <button onclick="buyUpgrade('website')">🌐 Créer un Site Web (500€) [+3€/s]</button>
+  </div>
+
+  <script>
+    // --- VARIABLES
+    let money = parseFloat(localStorage.getItem("money")) || 0;
+    let gainPerClick = parseFloat(localStorage.getItem("gainPerClick")) || 1;
+    let gainPerSecond = parseFloat(localStorage.getItem("gainPerSecond")) || 0;
+
+    const upgrades = {
+      pc: { cost: 100, clickBoost: 1, autoBoost: 0 },
+      freelancer: { cost: 250, clickBoost: 0, autoBoost: 1 },
+      website: { cost: 500, clickBoost: 0, autoBoost: 3 },
+    };
+
+    // --- FONCTIONS
+    function updateDisplay() {
+      document.getElementById("money").textContent = Math.floor(money);
+      document.getElementById("gain").textContent = gainPerClick;
+      document.getElementById("autoGain").textContent = gainPerSecond;
+    }
+
+    function work() {
+      money += gainPerClick;
+      updateDisplay();
+      saveGame();
+    }
+
+    function buyUpgrade(type) {
+      const upgrade = upgrades[type];
+      if (money >= upgrade.cost) {
+        money -= upgrade.cost;
+        gainPerClick += upgrade.clickBoost;
+        gainPerSecond += upgrade.autoBoost;
+        upgrades[type].cost = Math.floor(upgrade.cost * 1.5); // Prix augmente
+        alert(`Tu as acheté : ${type}!`);
+        updateDisplay();
+        saveGame();
+      } else {
+        alert("Pas assez d'argent !");
+      }
+    }
+
+    function autoIncome() {
+      money += gainPerSecond;
+      updateDisplay();
+      saveGame();
+    }
+
+    function saveGame() {
+      localStorage.setItem("money", money);
+      localStorage.setItem("gainPerClick", gainPerClick);
+      localStorage.setItem("gainPerSecond", gainPerSecond);
+    }
+
+    setInterval(autoIncome, 1000); // Gains par seconde
+    updateDisplay();
+  </script>
+</body>
+</html>
